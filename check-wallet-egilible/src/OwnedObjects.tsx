@@ -107,7 +107,7 @@ export function OwnedObjects({
               <Flex direction="column" gap="2">
                 {data.data.map((object) => (
                   <Card key={object.data?.objectId} size="1" variant="surface">
-                    <Text size="2" wrap="break-word">
+                    <Text size="2" >
                       🧾 <strong>Object ID:</strong> {object.data?.objectId}
                     </Text>
                   </Card>
