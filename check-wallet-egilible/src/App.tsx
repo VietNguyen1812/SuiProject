@@ -35,7 +35,7 @@ function App() {
         >
           <Box>
             <img
-              src="/check-wallet-egilible/img/Gr5cVGIXAAMIoi6.jpg"
+              src="/img/Gr5cVGIXAAMIoi6.jpg"
               alt="Sui Logo"
               style={{
                 height: "40px",
