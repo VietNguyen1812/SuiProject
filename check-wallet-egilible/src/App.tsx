@@ -35,10 +35,10 @@ function App() {
         >
           <Box>
             <img
-              src="../src/img/Gr5cVGIXAAMIoi6.jpg"
+              src="/img/Gr5cVGIXAAMIoi6.jpg"
               alt="Sui Logo"
               style={{
-                height: "50px", // Bạn có thể thay đổi kích thước ở đây
+                height: "40px",
                 width: "auto",
               }}
             />
@@ -83,7 +83,6 @@ function App() {
 
         {/* Footer */}
         <Flex
-        
           justify="center"
           py="3"
           style={{
