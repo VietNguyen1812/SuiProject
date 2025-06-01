@@ -1,5 +1,5 @@
 import { ConnectButton } from "@mysten/dapp-kit";
-import { Box, Container, Flex, Heading, Theme } from "@radix-ui/themes";
+import { Box, Container, Flex, Theme } from "@radix-ui/themes";
 import { WalletStatus } from "./WalletStatus";
 import "@radix-ui/themes/styles.css";
 import "./App.css"; // File CSS tùy chỉnh
@@ -83,7 +83,7 @@ function App() {
 
         {/* Footer */}
         <Flex
-          as="footer"
+        
           justify="center"
           py="3"
           style={{
