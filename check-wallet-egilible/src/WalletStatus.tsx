@@ -31,18 +31,18 @@ export function WalletStatus() {
   const suiClient = new SuiClient({ url: getFullnodeUrl("testnet") });
 
   // Hàm thêm transaction mới vào dailyWallet (cập nhật state)
-  const addTransactionToDailyWallet = (txn: any) => {
-    const timestamp = txn.timestampMs
-      ? new Date(Number(txn.timestampMs)).toISOString().split("T")[0]
-      : "Unknown";
+  // const addTransactionToDailyWallet = (txn: any) => {
+  //   const timestamp = txn.timestampMs
+  //     ? new Date(Number(txn.timestampMs)).toISOString().split("T")[0]
+  //     : "Unknown";
 
-    setDailyWallet((prev) => {
-      const updated = { ...prev };
-      if (!updated[timestamp]) updated[timestamp] = [];
-      updated[timestamp] = [...updated[timestamp], txn];
-      return updated;
-    });
-  };
+  //   setDailyWallet((prev) => {
+  //     const updated = { ...prev };
+  //     if (!updated[timestamp]) updated[timestamp] = [];
+  //     updated[timestamp] = [...updated[timestamp], txn];
+  //     return updated;
+  //   });
+  // };
 
   // Tách useEffect rõ ràng, load balance + check eligibility khi account thay đổi
   useEffect(() => {
@@ -114,11 +114,11 @@ export function WalletStatus() {
         return;
       }
 
-      const firstTxDate = new Date(earliestDate);
+      // const firstTxDate = new Date(earliestDate);
       const currentDate = new Date();
       const oneYearAgo = new Date();
       oneYearAgo.setFullYear(currentDate.getFullYear() - 1); // Fix: Set to one year ago
-      const isOverOneYear = firstTxDate <= oneYearAgo; // Fix: Check if firstTxDate is older than one year
+      // const isOverOneYear = firstTxDate <= oneYearAgo; // Fix: Check if firstTxDate is older than one year
       const hasEnoughTransactions = totalTransactions >= 1;
 
       if ( hasEnoughTransactions) {
