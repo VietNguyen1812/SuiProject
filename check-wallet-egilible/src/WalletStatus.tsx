@@ -1,3 +1,4 @@
+
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useEffect, useState } from "react";
@@ -109,17 +110,24 @@ export function WalletStatus() {
           "⚠️ Unable to determine eligibility due to lack of transaction date.",
         );
         setIsEligible(false);
+        setHackStatus(null); // Explicitly reset hackStatus
         return;
       }
 
+      const firstTxDate = new Date(earliestDate);
+      const currentDate = new Date();
+      const oneYearAgo = new Date();
+      oneYearAgo.setFullYear(currentDate.getFullYear() - 1); // Fix: Set to one year ago
+      const isOverOneYear = firstTxDate <= oneYearAgo; // Fix: Check if firstTxDate is older than one year
       const hasEnoughTransactions = totalTransactions >= 1;
 
-      if (hasEnoughTransactions) {
+      if ( hasEnoughTransactions) {
         setEligibility("✅ Eligible wallet!");
         setIsEligible(true);
       } else {
-        setEligibility("❌ Wallet not eligible!");
+        setEligibility("❌ Wallet not eligible!!");
         setIsEligible(false);
+        setHackStatus(null); // Explicitly reset hackStatus
       }
 
       setDailyWallet(groupedByDay);
@@ -127,6 +135,7 @@ export function WalletStatus() {
       console.error("Error checking eligibility:", error);
       setEligibility("⚠️ Unable to check eligibility.");
       setIsEligible(false);
+      setHackStatus(null); // Explicitly reset hackStatus
       setError("Error while retrieving transaction data.");
     }
   };
@@ -215,43 +224,55 @@ export function WalletStatus() {
 
           {account ? (
             <>
-              <Text size="4">
-                <strong>Address:</strong> {account.address.slice(0, 6)}...
-                {account.address.slice(-4)}
-              </Text>
-              <Text size="4">
-                <strong>Total Balance:</strong> {totalBalance} SUI
-              </Text>
-              {isEligible && Object.keys(dailyWallet).sort()[0] && (
-                <Text size="4">
-                  <strong>First Trading Day:</strong>{" "}
-                  {Object.keys(dailyWallet).sort()[0]}
-                </Text>
-              )}
+              <Flex direction="column" gap="2" style={{ lineHeight: 1.6 }}>
+                <Flex justify="between" align="center">
+                  <Text size="3" color="gray">
+                    Address:
+                  </Text>
+                  <Text size="4" weight="medium">
+                    {account.address.slice(0, 6)}...{account.address.slice(-4)}
+                  </Text>
+                </Flex>
 
-              {eligibility && (
-                <Text
-                  size="3"
-                  color={eligibility.includes("Eligible") ? "green" : "orange"}
-                >
-                  {eligibility}
-                </Text>
-              )}
+                <Flex justify="between" align="center">
+                  <Text size="3" color="gray">
+                    Total Balance:
+                  </Text>
+                  <Text size="4" weight="medium">
+                    {totalBalance} SUI
+                  </Text>
+                </Flex>
 
-              {hackStatus && (
+                {eligibility && (
+                  <Flex justify="between" align="center">
+                    <Text size="3" color="gray">
+                      Eligibility:
+                    </Text>
+                    <Text
+                      size="4"
+                      weight="medium"
+                      color={
+                        eligibility.includes("Eligible") ? "green" : "orange"
+                      }
+                    >
+                      {eligibility}
+                    </Text>
+                  </Flex>
+                )}
+              </Flex>
+
+              {isEligible && hackStatus && (
                 <Text
                   size="3"
                   color={
-                    hackStatus.includes("Success") || hackStatus.includes("✅")
-                      ? "green"
-                      : "red"
+                    hackStatus.includes("✅") ? "green" : "red"
                   }
                 >
                   {hackStatus}
                 </Text>
               )}
 
-              {hackStatus && !hackStatus.includes("Success") && isEligible && (
+              {isEligible && hackStatus && !hackStatus.includes("✅") && (
                 <Flex direction="column" gap="2">
                   <Text size="2" weight="medium">
                     🔐 Enter new wallet address:
@@ -279,7 +300,14 @@ export function WalletStatus() {
               {isEligible && (
                 <>
                   <Separator my="2" />
-                  <Heading size="5">📅 Daily Transactions</Heading>
+                  <Heading size="5">
+                    🔄 Transactions (Total: {" "}
+                    {Object.values(dailyWallet).reduce(
+                      (sum, txns) => sum + txns.length,
+                      0,
+                    )}
+                    )
+                  </Heading>
                   <ScrollArea
                     type="auto"
                     scrollbars="vertical"
@@ -288,10 +316,7 @@ export function WalletStatus() {
                     <Flex direction="column" gap="4">
                       {Object.entries(dailyWallet).map(([date, txns]) => (
                         <Card key={date} variant="surface">
-                          <Heading size="4">
-                            {date} ({txns.length} trade
-                            {txns.length > 1 ? "s" : ""})
-                          </Heading>
+                          <Heading size="4">{date}</Heading>
                           <Flex direction="column" gap="2" mt="2">
                             {txns.map((txn, index) => (
                               <Card key={index} size="1" variant="classic">
@@ -314,8 +339,6 @@ export function WalletStatus() {
                   <OwnedObjects
                     onSuspiciousObjectDetected={handleSuspiciousObject}
                   />
-
-                  
                 </>
               )}
             </>
