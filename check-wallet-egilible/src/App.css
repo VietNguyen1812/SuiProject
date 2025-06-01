@@ -1,0 +1,9 @@
+.connect-button:hover {
+  background: #5A9DE0 !important; /* Màu xanh lam đậm hơn khi hover */
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+.connect-button:active {
+  transform: translateY(0);
+}
